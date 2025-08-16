@@ -66,4 +66,10 @@ export class HistoryHandler {
     getMemory(): string {
         return this.savedMemory.join("\n");
     }
+    getSteps(): string[] {
+        return this.steps;
+    }
+    getCurrentStep(): string {
+        return this.currentStep || "unknow...";
+    }
 }
