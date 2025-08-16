@@ -32,31 +32,20 @@ docker run -it --rm \
 2. Run Agent Server in another console.
 
 ```bash
+cd path_to_this_repository
 cd agent
 npm run dev
 ```
 
-3. Open HTML
+3. Start front server in another console.
 
-```
+```bash
 cd path_to_this_repository
-open noVnc.html
+cd front
+npm run dev
 ```
 
-4. Control throught agent server.
+4. Control throught front page (http://localhost:5173)
 
-init
-
-```bash
-curl -X POST http://localhost:3002/start \   
-  -H "Content-Type: application/json" \
-  -d "{\"purpose\":\"京都でおいしいトンカツ屋を調べたい\"}"
-"{\"status\":\"success\"}"
-```
-
-proceed next action
-
-```bash
-curl -XPOST http://localhost:3002/doProceed \
-  -H "Content-Type: application/json"
-```
+  A. Go to http://localhost:5173/init and input purpose and send
+  B. After OpenAI's quering, Page will goto http://localhost:5173/main and press "PROCEEDs"
