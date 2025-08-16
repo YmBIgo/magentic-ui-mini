@@ -1,0 +1,73 @@
+docker run --rm -p 6080:80 -v /dev/shm:/dev/shm dorowu/ubuntu-desktop-lxde-vnc
+
+cd ./NoVNC
+./utils/novnc_proxy --vnc localhost:6801 --listen 6080 --web .
+
+http://kazuyanomacbook-pro-2.local:5901/vnc.html?host=KazuyanoMacBook-Pro-2.local&port=6080&autoconnect=1
+
+----
+
+docker run -d \
+  --name chromium-vnc \
+  --hostname chromium-vnc \
+  --add-host="host.docker.internal:host-gateway" \
+  --platform=linux/amd64 \
+  -p 6901:6901 \
+  -p 9200:9200 \
+  --shm-size=256m \
+  -e VNC_PW=headless \
+  accetto/ubuntu-vnc-xfce-chromium-g3:latest
+
+docker exec -it chromium-vnc /lib/usr/chromium-browser/chromium-browser --no-sandbox --remote-debugging-address=0.0.0.0 --remote-debugging-port=9200
+
+docker exec -it chromium-vnc chromium-browser --no-sandbox --remote-debugging-address=0.0.0.0 --remote-debugging-port=9200
+
+----
+
+docker build ./ --platform=linux/amd64 -t vnc-chromium-2
+docker run -it --rm \
+    --hostname vnc-chromium-2 \
+    -p 3001:3001 \
+    -p 9200:9200 \
+    -p 6080:6080 \
+    -e VNC_PW=headless \
+    --shm-size=256m \
+    vnc-chromium-2
+
+curl -X POST http://localhost:3001/gotoPage \
+  -H "Content-Type: application/json" \
+  -d "{\"url\":\"https://yahoo.co.jp\"}"
+
+curl -X POST http://localhost:3001/keyboardType \
+  -H "Content-Type: application/json" \
+  -d "{\"text\":\"京都\"}"
+
+curl -X POST http://localhost:3001/tapText \
+  -H "Content-Type: application/json" \
+  -d "{\"text\":\"京都の動画\"}"
+
+curl -X POST http://localhost:3001/getScreenshot \
+  -H "Content-Type: application/json"
+
+curl -X POST http://localhost:3001/keyboardEnter \
+  -H "Content-Type: application/json"
+
+curl -X POST http://localhost:3001/scrollUp \
+  -H "Content-Type: application/json"
+
+curl -X POST http://localhost:3001/refresh \
+  -H "Content-Type: application/json"
+
+curl -X POST http://localhost:3001/searchWeb \
+  -H "Content-Type: application/json" \
+  -d "{\"query\":\"京都\"}"
+
+http://localhost:6080/vnc.html?host=localhost&port=6080&password=headless&autoconnect=1
+
+curl -X POST http://localhost:3002/start \
+  -H "Content-Type: application/json" \
+  -d "{\"purpose\":\"京都でおいしいトンカツ屋を調べたい\"}"
+
+curl -XPOST http://localhost:3002/doProceed \
+  -H "Content-Type: application/json"
+  
